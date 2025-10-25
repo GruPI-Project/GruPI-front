@@ -1,13 +1,16 @@
 import { createApp } from 'vue'
-import './style.css'
+
 import App from './App.vue'
 
+import router from '@/router/index'
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
-import { definePreset } from '@primeuix/themes';
 
+import { definePreset } from '@primeuix/themes';
 import { createPinia } from 'pinia'
 
+import './style.css'
+import {ToastService} from "primevue";
 
 //Main color #9D1B32FF
 const GrupiPreset = definePreset(Aura, {
@@ -71,5 +74,7 @@ app.use(PrimeVue, {
         }
     }
 });
+app.use(ToastService);
 app.use(pinia);
+app.use(router);
 app.mount('#app');

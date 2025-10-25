@@ -2,13 +2,14 @@
   <LoginTemplate>
     <template #branding>
       <BrandingPanel>
-        Encontre pessoas para seu
-        <strong>Projeto Integrador</strong> e inicie a jornada rumo à
-        <strong>excelência acadêmica!</strong>
+        <strong>Verifique seu E-mail</strong>
+        <div style="font-size: 22px">
+          Enviamos um código de 6 dígitos em seu e-mail acadêmico.
+        </div>
       </BrandingPanel>
     </template>
     <template #form>
-      <LoginPanel />
+      <OTPPanel />
     </template>
   </LoginTemplate>
 </template>
@@ -16,5 +17,8 @@
 <script setup>
 import LoginTemplate from '@/templates/LoginTemplate.vue';
 import BrandingPanel from '@/components/organisms/BrandingPanel.vue';
-import LoginPanel from '@/components/organisms/LoginPanel.vue';
+import OTPPanel from '@/components/organisms/OTPPanel.vue';
 </script>
+
+<style scoped>
+</style>

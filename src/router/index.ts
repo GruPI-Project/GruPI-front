@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import TempHome from '../App.vue'
+import TempHome from '@/views/HomePage.vue'
+import Dashboard from "@/views/dashboard.vue";
+
 
 const routes = [
     {
@@ -9,12 +11,36 @@ const routes = [
         component: TempHome
     },
     {
-        path: '/about',
-        name: 'About',
+        path: '/dashboard', // A URL para a sua nova página
+        name: 'dashboard',
+        component: Dashboard,
+    },
+    {
+        path: '/login',
+        name: 'Login',
         //    "Lazy Loading"
         //    Este componente só será baixado pelo navegador quando o usuário
         //    realmente visitar a rota '/login'.
-        component: () => import('../views/LoginPage.vue')
+        component: () => {
+            // @ts-ignore
+            return import('@/views/LoginPage.vue');
+        }
+    },
+    {
+        path: '/password-reset/request',
+        name: 'paswword-reset-request',
+        component: () => {
+            // @ts-ignore
+            return import('@/views/RequestPasswordPage.vue');
+        }
+    },
+    {
+        path: '/password-reset/otp',
+        name: 'password-reset-otp',
+        component: () => {
+            // @ts-ignore
+            return import('@/views/RequestPasswordOTPPage.vue');
+        }
     }
 ]
 
