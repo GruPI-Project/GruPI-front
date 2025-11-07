@@ -3,14 +3,14 @@
 # =================================================================
 
 # Build stage
-FROM node:18-alpine AS builder
+FROM oven/bun:latest AS builder
 
 # Definir diretório de trabalho
 WORKDIR /app
 
-RUN npm install -g bun
 
 # Copiar arquivos de dependências
+COPY package*.json ./
 COPY bun.lock* ./
 
 # Instalar dependências (Bun ou NPM)
