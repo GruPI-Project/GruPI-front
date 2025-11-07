@@ -17,6 +17,17 @@ export const useAuthStore = defineStore('auth', {
     }),
 
     actions: {
+        async register(credentials: Record<string, string>) {
+            this.status = 'loading';
+            try {
+                await apiClient.post('/auth/registration/', credentials);
+                this.status = 'success';
+                console.log("Registro bem-sucedido");
+            } catch (error) {
+                this.status = 'error';
+                throw error;
+            }
+        },
         async login(credentials: Record<string, string>) {
             this.status = 'loading';
             try {

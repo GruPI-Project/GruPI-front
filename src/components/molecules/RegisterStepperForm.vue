@@ -144,8 +144,20 @@ const onFormSubmit = handleSubmit(async (formValues) => {
     // Remove password2 from the data sent to API since it's just for confirmation
     const { password2, ...registrationData } = formValues;
     
+    // Convert numeric fields to strings for API compatibility
+    const apiData = {
+      ...registrationData,
+      polo: registrationData.polo?.toString(),
+      drp: registrationData.drp?.toString(),
+      curso: registrationData.curso?.toString(),
+      eixo: registrationData.eixo?.toString(),
+      pi: registrationData.pi?.toString(),
+      // Convert tags array to comma-separated string for API compatibility
+      tags: registrationData.tags?.map(tag => tag.toString()).join(',') || ''
+    };
+    
     // Here you would typically call your registration API
-    // await authStore.register(registrationData);
+    await authStore.register(apiData);
     
     alert('Usuário registrado com sucesso!');
   } catch (error) {
