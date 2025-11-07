@@ -16,9 +16,10 @@ COPY bun.lock* ./
 # Instalar dependências (Bun ou NPM)
 RUN bun install
 
+
 # Copiar código fonte
 COPY . .
-
+RUN cat src/App.vue
 # Construir a aplicação
 RUN bun run build
 

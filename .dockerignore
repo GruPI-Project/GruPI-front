@@ -1,0 +1,17 @@
+node_modules
+dist
+.env
+.vscode
+.DS_Store
+.idea
+npm-debug.log
+yarn-error.log
+.bun
+.bunfig.toml
+.bun_modules
+.buninstall
+*.local
+*.log
+coverage
+*.tsbuildinfo
+.cache
