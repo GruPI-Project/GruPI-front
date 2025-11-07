@@ -45,22 +45,25 @@ const schema = toTypedSchema(z.object({
 }));
 const { handleSubmit } = useForm({ validationSchema: schema });
 
-const onFormSubmit = handleSubmit(async (values) => {
-  try {
-    await authStore.validatePasswordResetOTP({
-      email: email.value,
-      otp: values.otp,
-    });
+const onFormSubmit = (event: any) => {
+  event.preventDefault();
+  handleSubmit(async (values) => {
+    try {
+      await authStore.validatePasswordResetOTP({
+        email: email.value,
+        otp: values.otp,
+      });
 
-    toast.add({ severity: 'success', summary: 'Código verificado!', detail: 'Agora defina sua nova senha.', life: 3000 });
-    await router.push({name: 'set-new-password'});
+      toast.add({ severity: 'success', summary: 'Código verificado!', detail: 'Agora defina sua nova senha.', life: 3000 });
+      await router.push({name: 'set-new-password'});
 
-  } catch (error: any) {
-    console.log(error)
-    const detail = error.response?.data?.detail || 'Código inválido ou expirado.';
-    toast.add({ severity: 'error', summary: 'Erro na verificação', detail, life: 3000 });
-  }
-});
+    } catch (error: any) {
+      console.error(error)
+      const detail = error.response?.data?.detail || 'Código inválido ou expirado.';
+      toast.add({ severity: 'error', summary: 'Erro na verificação', detail, life: 3000 });
+    }
+  })();
+};
 </script>
 
 <style scoped>
