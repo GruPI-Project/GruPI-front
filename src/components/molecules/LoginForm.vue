@@ -1,4 +1,3 @@
-// SeuFormularioDeLogin.vue
 <script setup lang="ts">
 import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
@@ -60,7 +59,6 @@ const onFormSubmit = handleSubmit(async (values) => {
   try {
     await authStore.login(values);
     toast.add({ severity: 'success', summary: 'Login bem-sucedido!', life: 3000 });
-    // Redireciona para o dashboard após o login
     await router.push('/dashboard');
   } catch (error) {
     toast.add({ severity: 'error', summary: 'Erro no Login', detail: 'Credenciais inválidas.', life: 3000 });

@@ -36,12 +36,5 @@ const handleConfirmClick = () => {
 }
 </script>
 <style scoped>
-  @import "tailwindcss";
-  @import "tailwindcss-primeui";
 
-
-  .p-button{
-    width: 100%;
-
-  }
 </style>

@@ -8,7 +8,7 @@
       </BrandingPanel>
     </template>
     <template #form>
-      <LoginPanel />
+      <RegisterPanel />
     </template>
   </LoginTemplate>
 </template>
@@ -16,5 +16,5 @@
 <script setup>
 import LoginTemplate from '@/templates/LoginTemplate.vue';
 import BrandingPanel from '@/components/organisms/BrandingPanel.vue';
-import LoginPanel from '@/components/organisms/LoginPanel.vue';
+import RegisterPanel from "@/components/organisms/RegisterPanel.vue";
 </script>

@@ -17,17 +17,21 @@ onMounted(async () => {
 </script>
 
 <template>
-  <main>
-    <router-view />
-  </main>
+  <div class="app-container">
+    <RouterView />
+  </div>
 </template>
 
 <style scoped>
-  html, body {
-    margin: 0;
-    padding: 0;
+
+
+  .app-container {
+    max-width: 1920px;
+
+    margin-left: auto;
+    margin-right: auto;
+
+    width: 100%;
   }
-  * {
-    box-sizing: border-box;
-  }
+
 </style>

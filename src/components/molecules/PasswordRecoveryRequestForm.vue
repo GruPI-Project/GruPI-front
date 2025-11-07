@@ -61,9 +61,6 @@ const onFormSubmit = handleSubmit(async (values) => {
     toast.add({ severity: 'error', summary: 'Erro', detail, life: 10000 });
   }
 });
-
-
-
 </script>
 
 <template>
@@ -83,7 +80,7 @@ const onFormSubmit = handleSubmit(async (values) => {
           type="email"
           placeholder=""
       />
-      <BaseButton type="submit" severity="secondary" label="Entrar" />
+      <BaseButton type="submit" severity="secondary" label="ENVIAR CÓDIGO" />
     </form>
   </div>
 </template>

@@ -10,7 +10,7 @@ import PasswordRecoveryRequestForm from "@/components/molecules/PasswordRecovery
     <div class="links-container">
       <LinkField
           label="Lembrou sua senha? Clique aqui"
-          url="/forgot-password"
+          url="/login"
       />
     </div>
   </div>

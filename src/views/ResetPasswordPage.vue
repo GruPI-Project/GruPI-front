@@ -4,12 +4,13 @@
       <BrandingPanel>
         <strong>Esqueceu a Senha?</strong>
         <div style="font-size: 22px">
-          Preencha o seu e-mail para recuperar.
+          <strong>Alterar a Senha</strong>
+          Digite a sua nova senha de acesso.
         </div>
       </BrandingPanel>
     </template>
     <template #form>
-      <RequestPasswordPanel />
+      <ResetPasswordPanel />
     </template>
   </LoginTemplate>
 </template>
@@ -17,7 +18,7 @@
 <script setup>
 import LoginTemplate from '@/templates/LoginTemplate.vue';
 import BrandingPanel from '@/components/organisms/BrandingPanel.vue';
-import RequestPasswordPanel from '@/components/organisms/RequestPasswordPanel.vue';
+
 </script>
 
 <style scoped>

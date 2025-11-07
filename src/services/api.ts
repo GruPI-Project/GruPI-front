@@ -32,6 +32,10 @@ const apiClientCsrf = axios.create({
 // Interceptor para adicionar o token CSRF a cada requisição "unsafe" (POST, PUT, DELETE)
 apiClient.interceptors.request.use((config) => {
     if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(config.method?.toUpperCase() || '')) {
+        //clear previous token
+        if (config.headers && config.headers['X-CSRFToken']) {
+            delete config.headers['X-CSRFToken'];
+        }
         const csrfToken = getCookie('csrftoken');
         console.log('token', csrfToken);
         if (csrfToken) {

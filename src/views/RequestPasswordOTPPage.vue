@@ -9,7 +9,7 @@
       </BrandingPanel>
     </template>
     <template #form>
-      <OTPPanel />
+      <OTPValidatePanel />
     </template>
   </LoginTemplate>
 </template>
@@ -17,7 +17,7 @@
 <script setup>
 import LoginTemplate from '@/templates/LoginTemplate.vue';
 import BrandingPanel from '@/components/organisms/BrandingPanel.vue';
-import OTPPanel from '@/components/organisms/OTPPanel.vue';
+import OTPValidatePanel from '@/components/organisms/OTPValidatePanel.vue';
 </script>
 
 <style scoped>

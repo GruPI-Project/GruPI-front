@@ -15,7 +15,7 @@ defineProps({
 
 <template>
   <div class="link-field">
-    <router-link to="{{ url }}" class="link-text">{{ label }}</router-link>
+    <router-link :to="url" class="link-text">{{ label }}</router-link>
   </div>
 </template>
 

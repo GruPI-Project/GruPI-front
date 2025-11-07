@@ -1,16 +1,17 @@
 <script setup lang="ts">
 
 import LinkField from "@/components/atoms/LinkField.vue";
-import PasswordRecoveryRequestForm from "@/components/molecules/PasswordRecoveryRequestForm.vue";
+import OtpValidateForm from "@/components/molecules/OtpValidateForm.vue";
+
 </script>
 
 <template>
   <div class="login-panel">
-    <PasswordRecoveryRequestForm />
+    <OtpValidateForm />
     <div class="links-container">
       <LinkField
           label="Lembrou sua senha? Clique aqui"
-          url="/forgot-password"
+          url="/login"
       />
     </div>
   </div>

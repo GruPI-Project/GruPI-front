@@ -1,19 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import TempHome from '@/views/HomePage.vue'
-import Dashboard from "@/views/dashboard.vue";
-
+// import Dashboard from "@/views/dashboard.vue";
+import DashboardPage from "@/views/DashboardPage.vue";
 
 const routes = [
     {
-        path: '/',
-        name: 'Home',
-        component: TempHome
-    },
-    {
         path: '/dashboard', // A URL para a sua nova página
         name: 'dashboard',
-        component: Dashboard,
+        component: DashboardPage,
     },
     {
         path: '/login',
@@ -40,6 +34,22 @@ const routes = [
         component: () => {
             // @ts-ignore
             return import('@/views/RequestPasswordOTPPage.vue');
+        }
+    },
+    {
+        path: '/password-reset/set-new',
+        name: 'set-new-password',
+        component: () => {
+            // @ts-ignore
+            return import('@/views/ResetPasswordPage.vue');
+        }
+    },
+    {
+        path: '/register',
+        name: 'register',
+        component: () => {
+            // @ts-ignore
+            return import('@/views/RegisterPage.vue');
         }
     }
 ]

@@ -30,6 +30,7 @@ const { value, errorMessage } = useField(toRef(props, 'name'));
         size="large"
         multiple
         filter
+        class="p-listbox"
     />
     <Message v-if="errorMessage" severity="error" :closable="false">{{ errorMessage }}</Message>
   </div>
@@ -48,18 +49,6 @@ const { value, errorMessage } = useField(toRef(props, 'name'));
   font-family: sans-serif, Arial, Helvetica;
   font-size: 1.1rem;
   font-weight: normal;
-}
-
-.p-select {
-  width: 100%;
-  border: none;
-  background-color: #D9D9D9;
-  border-radius: 8px;
-  height: 3rem;
-}
-
-.p-select-label{
-  font-size: 2rem;
 }
 
 </style>

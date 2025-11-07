@@ -49,13 +49,11 @@ const { value, errorMessage } = useField(toRef(props, 'name'));
   margin-bottom: 1.5rem;
 }
 .input-label {
-  display: block;
   margin-bottom: 0.5rem;
   color: #000000;
   font-family: sans-serif, Arial, Helvetica;
   font-size: 1.1rem;
   font-weight: normal;
-
 }
 .input-field {
   width: 100%;

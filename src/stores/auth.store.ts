@@ -1,21 +1,7 @@
 import { defineStore } from 'pinia';
 import apiClient from '@/services/api';
+import type {User, DrpOption, PolosOption} from '@/types/user.types';
 
-interface Profile {
-    polo: string;
-    curso: string;
-    projeto_integrador: string;
-    eixo: string;
-    drp: string;
-}
-
-interface User {
-    pk: number;
-    email: string;
-    first_name: string;
-    last_name: string;
-    profile: Profile;
-}
 
 interface AuthState {
     user: User | null;
@@ -75,5 +61,76 @@ export const useAuthStore = defineStore('auth', {
                 throw error;
             }
         },
+        async validatePasswordResetOTP(payload: { email: string; otp: string }) {
+            try {
+                await apiClient.post('/password-reset/validate-otp/', payload);
+            } catch (error) {
+                console.error("Erro ao validar OTP de reset:", error);
+                throw error;
+            }
+        },
+        async setNewPassword(payload: { new_password1: string; new_password2: string }) {
+            try {
+                await apiClient.post('/password-reset/set-new/', payload);
+            } catch (error) {
+                console.error("Erro ao definir nova senha:", error);
+                throw error;
+            }
+        },
+        async getDRPs() {
+            try {
+                const response = await apiClient.get<DrpOption[]>('/drps/');
+                return response.data;
+            } catch (error) {
+                console.error("Erro ao obter DRPs:", error);
+                throw error;
+            }
+        },
+        async getPolos() {
+            try {
+                const response = await apiClient.get<PolosOption[]>('/polos/');
+                return response.data;
+            } catch (error) {
+                console.error("Erro ao obter os Polos:", error);
+                throw error;
+            }
+        },
+        async getEixos() {
+            try {
+                const response = await apiClient.get('/eixos/');
+                return response.data;
+            } catch (error) {
+                console.error("Erro ao obter os Eixos:", error);
+                throw error;
+            }
+        },
+        async getCursos() {
+            try {
+                const response = await apiClient.get('/cursos/');
+                return response.data;
+            } catch (error) {
+                console.error("Erro ao obter os Cursos:", error);
+                throw error;
+            }
+        },
+        async getPIs() {
+            try {
+                const response = await apiClient.get('/pis/');
+                return response.data;
+            } catch (error) {
+                console.error("Erro ao obter os PIs:", error);
+                throw error;
+            }
+        },
+        async getTags() {
+            try {
+                const response = await apiClient.get('/tags/');
+                return response.data;
+            } catch (error) {
+                console.error("Erro ao obter as Tags:", error);
+                throw error;
+            }
+        },
+
     },
 });
