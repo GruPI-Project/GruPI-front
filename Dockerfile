@@ -8,18 +8,19 @@ FROM node:18-alpine AS builder
 # Definir diretório de trabalho
 WORKDIR /app
 
+RUN npm install -g bun
+
 # Copiar arquivos de dependências
-COPY package*.json ./
 COPY bun.lock* ./
 
 # Instalar dependências (Bun ou NPM)
-RUN npm install
+RUN bun install
 
 # Copiar código fonte
 COPY . .
 
 # Construir a aplicação
-RUN npm run build
+RUN bun run build
 
 # Production stage
 FROM nginx:alpine AS production
