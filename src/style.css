@@ -1,5 +1,3 @@
-
-
 :root {
     --primary-50: #fce6e7;
     --primary-100: #fad0d3;
@@ -17,6 +15,7 @@
 body {
     margin: 0;
     padding: 0;
+    background-color: #F8F5F0;
 }
 
 .login-panel {
