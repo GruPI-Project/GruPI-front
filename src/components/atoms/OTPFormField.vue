@@ -3,18 +3,12 @@ import { toRef } from 'vue';
 import { useField } from 'vee-validate';
 import Message from 'primevue/message';
 
-const props = defineProps({
-  name: {
-    type: String,
-    required: true,
-  },
-  label: {
-    type: String,
-    required: true,
-  },
-});
+const props = defineProps<{
+  name: string;
+  label: string;
+}>();
 
-const { value, errorMessage } = useField(toRef(props, 'name'));
+const { value, errorMessage } = useField<string>(toRef(props, 'name'));
 </script>
 
 <template>

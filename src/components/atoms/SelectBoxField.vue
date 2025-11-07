@@ -13,7 +13,7 @@ const props = defineProps<{
   disabled?: boolean;
 }>();
 
-const { value, errorMessage } = useField(toRef(props, 'name'));
+const { value, errorMessage } = useField<any>(toRef(props, 'name'));
 
 </script>
 

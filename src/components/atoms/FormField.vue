@@ -4,26 +4,14 @@ import { useField } from 'vee-validate';
 import InputText from 'primevue/inputtext';
 import Message from 'primevue/message';
 
-const props = defineProps({
-  name: {
-    type: String,
-    required: true,
-  },
-  label: {
-    type: String,
-    required: true,
-  },
-  type: {
-    type: String,
-    default: 'text',
-  },
-  placeholder: {
-    type: String,
-    default: '',
-  },
-});
+const props = defineProps<{
+  name: string;
+  label: string;
+  type?: string;
+  placeholder?: string;
+}>();
 
-const { value, errorMessage } = useField(toRef(props, 'name'));
+const { value, errorMessage } = useField<string | null>(toRef(props, 'name'));
 </script>
 
 <template>
