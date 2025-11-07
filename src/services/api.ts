@@ -1,5 +1,4 @@
 import axios from 'axios';
-import type { AxiosRequestConfig } from 'axios';
 
 // Função para obter valor da variável de ambiente com fallback
 function getEnvVar(key: string, fallback: string = ''): string {

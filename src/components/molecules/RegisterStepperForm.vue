@@ -110,7 +110,7 @@ const stepFields = {
   '2': ['polo', 'drp', 'curso', 'eixo'],
   '3': ['tags'],
   '4': ['password1', 'password2'],
-  '5': ['confirmation'],
+  '5': [],
 }as const;
 type Step = keyof typeof stepFields;
 const activeStep = ref<Step>('1');
@@ -118,11 +118,18 @@ const activeStep = ref<Step>('1');
 const goToNextStep = async (targetStep: Step) => {
   const currentStep = activeStep.value;
   const fieldsToValidate = stepFields[currentStep];
+  
+  if (fieldsToValidate.length === 0) {
+    // No validation needed for this step (e.g., confirmation step)
+    activeStep.value = targetStep;
+    return;
+  }
+
   const validationResults = await Promise.all(
-      fieldsToValidate.map(field => validateField(field))
+    fieldsToValidate.map(field => validateField(field))
   );
 
-  const isStepValid = validationResults.every((result: { valid: any; }) => result.valid);
+  const isStepValid = validationResults.every((result) => result.valid === true);
   if (isStepValid) {
     activeStep.value = targetStep;
   }
@@ -132,8 +139,19 @@ const goToPrevStep = (targetStep: Step) => {
 };
 
 const onFormSubmit = handleSubmit(async (formValues) => {
-  console.log("Formulário completo enviado:", formValues);
-  alert('Usuário registrado com sucesso!');
+  try {
+    console.log("Formulário completo enviado:", formValues);
+    // Remove password2 from the data sent to API since it's just for confirmation
+    const { password2, ...registrationData } = formValues;
+    
+    // Here you would typically call your registration API
+    // await authStore.register(registrationData);
+    
+    alert('Usuário registrado com sucesso!');
+  } catch (error) {
+    console.error('Erro ao registrar usuário:', error);
+    alert('Erro ao registrar usuário. Tente novamente.');
+  }
 });
 </script>
 
@@ -226,7 +244,7 @@ const onFormSubmit = handleSubmit(async (formValues) => {
                   label="Escolha suas tags de interesse (max 5)"
                   :options="Tags"
                   optionValue="id"
-                  optionLabel="name"
+                  optionLabel="nome"
               />
             </div>
             <div class="btn-group">

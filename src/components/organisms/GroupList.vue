@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import type { Group } from '@/types/group.types';
+import type { Group } from '@/types/user.types';
 import GroupCard from '@/components/molecules/GroupCard.vue';
 // import { useGroupStore } from '@/stores/group.store'; // Supondo que você crie uma store para grupos
 
