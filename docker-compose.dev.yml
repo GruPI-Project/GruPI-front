@@ -23,6 +23,8 @@ services:
       - VITE_ENABLE_DEBUG=${VITE_ENABLE_DEBUG}
     networks:
       - grupi-dev-network
+    labels:
+      - "project=grupi"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80"]
       interval: 30s
