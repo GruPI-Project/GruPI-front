@@ -4,10 +4,15 @@ import { useForm} from 'vee-validate';
 import {toTypedSchema} from '@vee-validate/zod';
 import * as z from 'zod';
 import {useAuthStore} from "@/stores/auth.store.ts";
+import {useRouter} from 'vue-router';
+import {useToast} from 'primevue/usetoast';
+import Toast from 'primevue/toast';
 import type {CursosOption, DrpOption, EixosOption, PIOption, PolosOption, TagsOption} from '@/types/user.types';
 import MultipleListBoxField from "@/components/atoms/MultipleListBoxField.vue";
 
 const authStore = useAuthStore();
+const router = useRouter();
+const toast = useToast();
 
 const DRPs = ref<DrpOption[]>([]);
 const Polos = ref<PolosOption[]>([]);
@@ -159,16 +164,40 @@ const onFormSubmit = handleSubmit(async (formValues) => {
     
     await authStore.register(payload);
     
-    alert('Usuário registrado com sucesso!');
-  } catch (error) {
+    toast.add({
+      severity: 'success',
+      summary: 'Cadastro realizado com sucesso!',
+      detail: 'Você receberá um email com o código de validação. Redirecionando para o login...',
+      life: 3000
+    });
+    
+    // Redirecionar para a página de login após 2 segundos
+    setTimeout(() => {
+      router.push('/login');
+    }, 2000);
+    
+  } catch (error: any) {
     console.error('Erro ao registrar usuário:', error);
-    alert('Erro ao registrar usuário. Tente novamente.');
+    
+    // Extrair mensagem de erro da API se disponível
+    const errorMessage = error?.response?.data?.message 
+      || error?.response?.data?.detail
+      || error?.message 
+      || 'Erro ao registrar usuário. Tente novamente.';
+    
+    toast.add({
+      severity: 'error',
+      summary: 'Erro no cadastro',
+      detail: errorMessage,
+      life: 5000
+    });
   }
 });
 </script>
 
 <template>
   <div class="card flex justify-left">
+    <Toast />
     <form @submit="onFormSubmit" >
       <Stepper v-model:value="activeStep" style="flex-basis: 50rem" class="stepper" >
         <StepList>

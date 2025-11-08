@@ -1,12 +1,12 @@
 <template>
   <Toast/>
-  <Form @submit="onFormSubmit" class="form-container">
+  <form @submit.prevent="onFormSubmit" class="form-container">
     <OTPFormField
         name="otp"
         label="Digite o Código"
     />
     <BaseButton type="submit" severity="secondary" label="RECUPERAR SENHA" />
-  </Form>
+  </form>
 </template>
 
 <script setup lang="ts">
@@ -15,7 +15,7 @@ import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
 import * as z from 'zod';
 import { useToast } from 'primevue/usetoast';
-import {Form} from "@primevue/forms";
+import Toast from 'primevue/toast';
 import {useAuthStore} from "@/stores/auth.store.ts";
 
 import OTPFormField from "@/components/atoms/OTPFormField.vue";
@@ -45,25 +45,22 @@ const schema = toTypedSchema(z.object({
 }));
 const { handleSubmit } = useForm({ validationSchema: schema });
 
-const onFormSubmit = (event: any) => {
-  event.preventDefault();
-  handleSubmit(async (values) => {
-    try {
-      await authStore.validatePasswordResetOTP({
-        email: email.value,
-        otp: values.otp,
-      });
+const onFormSubmit = handleSubmit(async (values) => {
+  try {
+    await authStore.validatePasswordResetOTP({
+      email: email.value,
+      otp: values.otp,
+    });
 
-      toast.add({ severity: 'success', summary: 'Código verificado!', detail: 'Agora defina sua nova senha.', life: 3000 });
-      await router.push({name: 'set-new-password'});
+    toast.add({ severity: 'success', summary: 'Código verificado!', detail: 'Agora defina sua nova senha.', life: 3000 });
+    await router.push({name: 'set-new-password'});
 
-    } catch (error: any) {
-      console.error(error)
-      const detail = error.response?.data?.detail || 'Código inválido ou expirado.';
-      toast.add({ severity: 'error', summary: 'Erro na verificação', detail, life: 3000 });
-    }
-  })();
-};
+  } catch (error: any) {
+    console.error(error)
+    const detail = error.response?.data?.detail || 'Código inválido ou expirado.';
+    toast.add({ severity: 'error', summary: 'Erro na verificação', detail, life: 3000 });
+  }
+});
 </script>
 
 <style scoped>
