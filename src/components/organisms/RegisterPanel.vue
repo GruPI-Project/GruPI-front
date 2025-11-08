@@ -1,6 +1,6 @@
 <script setup>
 import LinkField from "@/components/atoms/LinkField.vue";
-import RegisterForm from "@/components/molecules/RegisterForm.vue";
+import RegisterStepperForm from "@/components/molecules/RegisterStepperForm.vue";
 </script>
 
 <template>

@@ -17,7 +17,8 @@ const PIs = ref<PIOption[]>([]);
 const Tags = ref<TagsOption[]>([]);
 
 const schema = toTypedSchema(z.object({
-  email: z.email('Formato de email inválido')
+  email: z.string()
+      .email('Formato de email inválido')
       .min(1, 'O email é obrigatório')
       .refine((email) => email.endsWith('@aluno.univesp.br'), {
         message: 'O email deve ser do domínio @aluno.univesp.br',
@@ -47,9 +48,10 @@ const schema = toTypedSchema(z.object({
   polo: z.number().min(1, 'Polo é obrigatório'),
   drp: z.number().min(1, 'DRP é obrigatório'),
   curso: z.number().min(1, 'Curso é obrigatório'),
-  eixo: z.number().min(1, 'Eixo é obrigatório'),
-  nome_completo: z.string().min(1, 'O nome completo é obrigatório'),
-  pi: z.number().min(1, 'PI é obrigatório'),
+  projeto_integrador: z.number().min(1, 'Projeto Integrador é obrigatório'),
+  eixo: z.number().optional(), // Campo apenas visual, não é enviado
+  first_name: z.string().min(1, 'O nome é obrigatório'),
+  last_name: z.string().min(1, 'O sobrenome é obrigatório'),
   tags: z.array(z.number()).optional(),
 }).refine(
     data => data.password1 === data.password2, {
@@ -106,7 +108,7 @@ watch(() => values.curso, async (newCursoId) => {
 
 
 const stepFields = {
-  '1': ['nome_completo', 'email', 'pi'],
+  '1': ['first_name', 'last_name', 'email', 'projeto_integrador'],
   '2': ['polo', 'drp', 'curso', 'eixo'],
   '3': ['tags'],
   '4': ['password1', 'password2'],
@@ -141,23 +143,21 @@ const goToPrevStep = (targetStep: Step) => {
 const onFormSubmit = handleSubmit(async (formValues) => {
   try {
     console.log("Formulário completo enviado:", formValues);
-    // Remove password2 from the data sent to API since it's just for confirmation
-    const { password2, ...registrationData } = formValues;
     
-    // Convert numeric fields to strings for API compatibility
-    const apiData = {
-      ...registrationData,
-      polo: registrationData.polo?.toString(),
-      drp: registrationData.drp?.toString(),
-      curso: registrationData.curso?.toString(),
-      eixo: registrationData.eixo?.toString(),
-      pi: registrationData.pi?.toString(),
-      // Convert tags array to comma-separated string for API compatibility
-      tags: registrationData.tags?.map(tag => tag.toString()).join(',') || ''
+    // Preparar o payload conforme esperado pela API
+    const payload = {
+      email: formValues.email,
+      password1: formValues.password1,
+      password2: formValues.password2,
+      projeto_integrador: formValues.projeto_integrador,
+      drp: formValues.drp,
+      polo: formValues.polo,
+      curso: formValues.curso,
+      first_name: formValues.first_name,
+      last_name: formValues.last_name,
     };
     
-    // Here you would typically call your registration API
-    await authStore.register(apiData);
+    await authStore.register(payload);
     
     alert('Usuário registrado com sucesso!');
   } catch (error) {
@@ -182,9 +182,16 @@ const onFormSubmit = handleSubmit(async (formValues) => {
           <StepPanel value="1">
             <div class="step-content" style=" flex-direction: column;">
               <FormField
-                  name="nome_completo"
-                  label="Nome Completo"
+                  name="first_name"
+                  label="Nome"
                   type="text"
+                  placeholder="João"
+              />
+              <FormField
+                  name="last_name"
+                  label="Sobrenome"
+                  type="text"
+                  placeholder="Silva"
               />
               <FormField
                   name="email"
@@ -192,7 +199,7 @@ const onFormSubmit = handleSubmit(async (formValues) => {
                   type="email"
               />
               <SelectBoxField
-                  name="pi"
+                  name="projeto_integrador"
                   label="Qual PI você esta fazendo?"
                   :options="PIs"
                   optionValue="id"
