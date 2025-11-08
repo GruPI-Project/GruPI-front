@@ -17,7 +17,17 @@ export const useAuthStore = defineStore('auth', {
     }),
 
     actions: {
-        async register(credentials: Record<string, string>) {
+        async register(credentials: {
+            email: string;
+            password1: string;
+            password2: string;
+            projeto_integrador: number;
+            drp: number;
+            polo: number;
+            curso: number;
+            first_name: string;
+            last_name: string;
+        }) {
             this.status = 'loading';
             try {
                 // Garante que temos um CSRF token antes de fazer a requisição

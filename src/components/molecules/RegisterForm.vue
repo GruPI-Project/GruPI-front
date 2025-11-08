@@ -6,9 +6,10 @@ import BaseButton from '@/components/atoms/BaseButton.vue';
 import Toast from 'primevue/toast';
 import {useAuthStore} from '@/stores/auth.store';
 import FormField from '@/components/atoms/FormField.vue';
+import SelectBoxField from '@/components/atoms/SelectBoxField.vue';
 
 import {onMounted, ref, watch} from "vue";
-import type {CursosOption, DrpOption, EixosOption, PolosOption} from '@/types/user.types';
+import type {CursosOption, DrpOption, EixosOption, PolosOption, PIOption} from '@/types/user.types';
 
 const authStore = useAuthStore();
 
@@ -16,9 +17,11 @@ const DRPs = ref<DrpOption[]>([]);
 const Polos = ref<PolosOption[]>([]);
 const Eixos = ref<EixosOption[]>([]);
 const Cursos = ref<CursosOption[]>([]);
+const PIs = ref<PIOption[]>([]);
 
 const schema = toTypedSchema(z.object({
-  email: z.email('Formato de email inválido')
+  email: z.string()
+      .email('Formato de email inválido')
       .min(1, 'O email é obrigatório')
       .refine((email) => email.endsWith('@aluno.univesp.br'),{
             message: 'O email deve ser do domínio @aluno.univesp.br',
@@ -48,8 +51,10 @@ const schema = toTypedSchema(z.object({
   polo: z.number().min(1, 'Polo é obrigatório'),
   drp: z.number().min(1, 'DRP é obrigatório'),
   curso: z.number().min(1, 'Curso é obrigatório'),
-  eixo: z.number().min(1, 'Eixo é obrigatório'),
-  nome_completo: z.string().min(1, 'O nome completo é obrigatório'),
+  projeto_integrador: z.number().min(1, 'Projeto Integrador é obrigatório'),
+  eixo: z.number().optional(), // Campo apenas visual, não é enviado
+  first_name: z.string().min(1, 'O nome é obrigatório'),
+  last_name: z.string().min(1, 'O sobrenome é obrigatório'),
 }).refine(
     data => data.password1 === data.password2, {
       message: "As senhas não coincidem",
@@ -63,16 +68,18 @@ const { handleSubmit, values, setFieldValue } = useForm({
 
 onMounted(async () => {
   try {
-    const [drpData, polosData, cursoData, eixoData] = await Promise.all([
+    const [drpData, polosData, cursoData, eixoData, piData] = await Promise.all([
       authStore.getDRPs(),
       authStore.getPolos(),
       authStore.getCursos(),
       authStore.getEixos(),
+      authStore.getPIs(),
     ]);
     DRPs.value = drpData;
     Polos.value = polosData;
     Cursos.value = cursoData;
     Eixos.value = eixoData;
+    PIs.value = piData;
   } catch (error) {
     console.error("Não foi possível carregar os dados do formulário", error);
   }
@@ -102,7 +109,25 @@ watch(() => values.curso, async (newCursoId) => {
 });
 
 const onFormSubmit = handleSubmit(async (values) => {
-  console.log("Form values:", values);
+  // Preparar o payload conforme esperado pela API
+  const payload = {
+    email: values.email,
+    password1: values.password1,
+    password2: values.password2,
+    projeto_integrador: values.projeto_integrador,
+    drp: values.drp,
+    polo: values.polo,
+    curso: values.curso,
+    first_name: values.first_name,
+    last_name: values.last_name,
+  };
+  
+  try {
+    await authStore.register(payload);
+    console.log("Registro realizado com sucesso!");
+  } catch (error) {
+    console.error("Erro ao registrar:", error);
+  }
 });
 
 </script>
@@ -111,12 +136,20 @@ const onFormSubmit = handleSubmit(async (values) => {
   <div class="card flex justify-left">
     <Toast />
     <form @submit="onFormSubmit" class="form-container">
-      <FormField
-          name="nome_completo"
-          label="Nome Completo"
-          type="text"
-          placeholder=""
-      />
+      <div style="display: flex; gap: 1rem;">
+        <FormField
+            name="first_name"
+            label="Nome"
+            type="text"
+            placeholder="João"
+        />
+        <FormField
+            name="last_name"
+            label="Sobrenome"
+            type="text"
+            placeholder="Silva"
+        />
+      </div>
       <FormField
           name="email"
           label="Email Acadêmico"
@@ -161,7 +194,15 @@ const onFormSubmit = handleSubmit(async (values) => {
           :disabled="true"
       />
       </div>
-        <div style="display: flex; gap: 1rem;">
+      <SelectBoxField
+          name="projeto_integrador"
+          label="Projeto Integrador (PI)"
+          :options="PIs"
+          optionValue="id"
+          optionLabel="numero"
+          placeholder="Selecione seu PI"
+      />
+      <div style="display: flex; gap: 1rem;">
       <FormField
           name="password1"
           label="Senha"
