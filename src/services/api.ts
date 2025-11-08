@@ -53,19 +53,67 @@ const apiClientCsrf = axios.create({
 
 // Interceptor para adicionar o token CSRF a cada requisição "unsafe" (POST, PUT, DELETE)
 apiClient.interceptors.request.use((config) => {
-    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(config.method?.toUpperCase() || '')) {
-        //clear previous token
-        if (config.headers && config.headers['X-CSRFToken']) {
-            delete config.headers['X-CSRFToken'];
-        }
+    const method = config.method?.toUpperCase() || '';
+    console.log('Interceptor - Método:', method);
+    console.log('Interceptor - Headers antes:', config.headers);
+    
+    if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
         const csrfToken = getCookie('csrftoken');
-        console.log('token', csrfToken);
+        console.log('Interceptor - CSRF Token do cookie:', csrfToken);
+        
         if (csrfToken) {
-            config.headers['X-CSRFToken'] = csrfToken;
+            // Garante que o header seja definido corretamente
+            config.headers.set('X-CSRFToken', csrfToken);
+            console.log('Interceptor - CSRF Token adicionado ao header');
+        } else {
+            console.warn('Interceptor - CSRF Token não encontrado no cookie!');
         }
     }
+    
+    console.log('Interceptor - Headers depois:', config.headers);
     return config;
+}, (error) => {
+    console.error('Interceptor - Erro:', error);
+    return Promise.reject(error);
 });
+
+// Interceptor de resposta para logar erros detalhados
+apiClient.interceptors.response.use(
+    (response) => {
+        console.log('Resposta bem-sucedida:', response.status, response.config.url);
+        return response;
+    },
+    (error) => {
+        console.error('Erro na requisição:', {
+            url: error.config?.url,
+            method: error.config?.method,
+            status: error.response?.status,
+            data: error.response?.data,
+            headers: error.config?.headers
+        });
+        return Promise.reject(error);
+    }
+);
+
+// Função para garantir que temos um CSRF token válido
+export async function ensureCsrfToken(): Promise<void> {
+    const existingToken = getCookie('csrftoken');
+    
+    if (!existingToken) {
+        console.log('CSRF token não encontrado, buscando do servidor...');
+        try {
+            // Faz uma requisição GET simples para obter o CSRF token do Django
+            // Qualquer endpoint GET do Django que retorne o cookie CSRF funciona
+            await apiClientCsrf.get('/api/v1/auth/user/');
+            console.log('CSRF token obtido com sucesso');
+        } catch (error) {
+            console.warn('Erro ao obter CSRF token (pode ser esperado se não autenticado):', error);
+            // Não lançamos o erro pois pode ser normal não estar autenticado
+        }
+    } else {
+        console.log('CSRF token já existe:', existingToken);
+    }
+}
 
 export default apiClient;
 export { apiClientCsrf };

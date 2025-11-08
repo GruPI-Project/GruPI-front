@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import apiClient from '@/services/api';
+import apiClient, { ensureCsrfToken } from '@/services/api';
 import type {User, DrpOption, PolosOption} from '@/types/user.types';
 
 
@@ -20,6 +20,8 @@ export const useAuthStore = defineStore('auth', {
         async register(credentials: Record<string, string>) {
             this.status = 'loading';
             try {
+                // Garante que temos um CSRF token antes de fazer a requisição
+                await ensureCsrfToken();
                 await apiClient.post('/auth/registration/', credentials);
                 this.status = 'success';
                 console.log("Registro bem-sucedido");
@@ -31,6 +33,8 @@ export const useAuthStore = defineStore('auth', {
         async login(credentials: Record<string, string>) {
             this.status = 'loading';
             try {
+                // Garante que temos um CSRF token antes de fazer a requisição
+                await ensureCsrfToken();
                 // dj-rest-auth usa este endpoint por padrão
                 await apiClient.post('/auth/login/', credentials);
                 // Após o login bem-sucedido, buscamos os dados do usuário
@@ -58,6 +62,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async logout() {
             try {
+                await ensureCsrfToken();
                 await apiClient.post('/auth/logout/');
             } finally {
                 // Limpamos o estado independentemente do resultado
@@ -66,6 +71,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async requestPasswordReset(payload: { email: string }) {
             try {
+                await ensureCsrfToken();
                 await apiClient.post('/password-reset/request/', payload);
             } catch (error) {
                 console.error("Erro ao solicitar redefinição de senha:", error);
@@ -74,6 +80,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async validatePasswordResetOTP(payload: { email: string; otp: string }) {
             try {
+                await ensureCsrfToken();
                 await apiClient.post('/password-reset/validate-otp/', payload);
             } catch (error) {
                 console.error("Erro ao validar OTP de reset:", error);
@@ -82,6 +89,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async setNewPassword(payload: { new_password1: string; new_password2: string }) {
             try {
+                await ensureCsrfToken();
                 await apiClient.post('/password-reset/set-new/', payload);
             } catch (error) {
                 console.error("Erro ao definir nova senha:", error);
