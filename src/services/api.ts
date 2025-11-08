@@ -20,16 +20,22 @@ console.log('API Configuration:', {
 
 function getCookie(name: string): string | null {
     let cookieValue = null;
-    console.log("cookies", document.cookie.toString())
+    console.log("Cookies disponíveis:", document.cookie);
     if (document.cookie && document.cookie !== '') {
         const cookies = document.cookie.split(';');
+        console.log(`Procurando cookie '${name}' em ${cookies.length} cookies`);
         for (const cookieString of cookies) {
             const cookie = cookieString.trim();
+            console.log(`  Verificando: ${cookie.substring(0, 50)}...`);
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                console.log(`  ✓ Cookie '${name}' encontrado:`, cookieValue);
                 break;
             }
         }
+    }
+    if (!cookieValue) {
+        console.log(`  ✗ Cookie '${name}' não encontrado`);
     }
     return cookieValue;
 }
@@ -97,21 +103,61 @@ apiClient.interceptors.response.use(
 
 // Função para garantir que temos um CSRF token válido
 export async function ensureCsrfToken(): Promise<void> {
-    const existingToken = getCookie('csrftoken');
+    let existingToken = getCookie('csrftoken');
     
     if (!existingToken) {
-        console.log('CSRF token não encontrado, buscando do servidor...');
+        console.log('CSRF token não encontrado no cookie, buscando do servidor...');
         try {
-            // Faz uma requisição GET simples para obter o CSRF token do Django
-            // Qualquer endpoint GET do Django que retorne o cookie CSRF funciona
-            await apiClientCsrf.get('/api/v1/auth/user/');
-            console.log('CSRF token obtido com sucesso');
+            // Tentativa 1: Endpoint específico para obter CSRF token
+            // Muitas APIs Django expõem um endpoint /csrf/ ou similar
+            let response;
+            try {
+                response = await apiClientCsrf.get('/csrf/');
+                console.log('Tentativa 1: /csrf/ - Success');
+            } catch (e) {
+                console.log('Tentativa 1: /csrf/ - Não disponível');
+                // Tentativa 2: Qualquer endpoint GET que force o Django a setar o cookie
+                try {
+                    response = await apiClientCsrf.get('/api/v1/');
+                    console.log('Tentativa 2: /api/v1/ - Success');
+                } catch (e2) {
+                    console.log('Tentativa 2: /api/v1/ - Falhou');
+                    // Tentativa 3: Endpoint de auth
+                    response = await apiClientCsrf.get('/api/v1/auth/user/');
+                    console.log('Tentativa 3: /api/v1/auth/user/ - Success');
+                }
+            }
+            
+            // Aguarda um momento para o cookie ser setado
+            await new Promise(resolve => setTimeout(resolve, 200));
+            
+            // Verifica se o cookie foi setado
+            existingToken = getCookie('csrftoken');
+            
+            if (existingToken) {
+                console.log('✓ CSRF token obtido com sucesso do cookie após requisição');
+            } else {
+                console.warn('✗ Cookie CSRF não foi setado pelo servidor.');
+                console.warn('Isso geralmente acontece por problemas de CORS ou configuração de domínio.');
+                console.warn('Verifique as configurações do Django:');
+                console.warn('  - CSRF_COOKIE_SAMESITE = "None"');
+                console.warn('  - CSRF_COOKIE_SECURE = True');
+                console.warn('  - CSRF_COOKIE_DOMAIN = ".grupi-dev.pavops.net"');
+                console.warn('  - CORS_ALLOW_CREDENTIALS = True');
+                
+                // Tenta pegar do header da resposta como fallback
+                const csrfFromHeader = response?.headers['x-csrftoken'] || response?.headers['X-CSRFToken'];
+                if (csrfFromHeader) {
+                    console.log('Tentando setar cookie manualmente do header:', csrfFromHeader);
+                    // Tenta setar manualmente (provavelmente não vai funcionar por limitações de segurança)
+                    document.cookie = `csrftoken=${csrfFromHeader}; path=/; domain=.grupi-dev.pavops.net; secure; samesite=none`;
+                }
+            }
         } catch (error) {
-            console.warn('Erro ao obter CSRF token (pode ser esperado se não autenticado):', error);
-            // Não lançamos o erro pois pode ser normal não estar autenticado
+            console.warn('Todas as tentativas de obter CSRF token falharam:', error);
         }
     } else {
-        console.log('CSRF token já existe:', existingToken);
+        console.log('✓ CSRF token já existe no cookie');
     }
 }
 
