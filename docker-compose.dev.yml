@@ -24,7 +24,7 @@ services:
     networks:
       - grupi-dev-network
     labels:
-      - "project=grupi"
+      - "grupi"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:80"]
       interval: 30s

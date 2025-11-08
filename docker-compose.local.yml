@@ -32,7 +32,7 @@ services:
       timeout: 10s
       retries: 3
     labels:
-      - "project=grupi"
+      - "grupi"
 networks:
   grupi-local-network:
     driver: bridge
