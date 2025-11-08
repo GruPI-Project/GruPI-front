@@ -26,6 +26,9 @@ RUN bun run build
 # Production stage
 FROM nginx:alpine AS production
 
+# Copiar configuração customizada do nginx
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 # Copiar arquivos de build para o nginx
 COPY --from=builder /app/dist /usr/share/nginx/html
 
