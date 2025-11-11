@@ -1,3 +1,4 @@
+<!--APppLogo.vue-->
 <template>
   <div class="logo-container">
     <img

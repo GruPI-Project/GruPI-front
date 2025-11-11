@@ -1,3 +1,4 @@
+<!--UserProfeHeader-->
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useAuthStore } from '@/stores/auth.store';
@@ -18,7 +19,9 @@ const handleLogout = () => {
 <template>
   <header class="user-header">
     <div class="header-content">
-      <AppLogo class="logo" />
+    <div class="logo-panel" >
+      <AppLogo />
+    </div>
       <div class="user-info-card" v-if="user">
         <p><strong>Nome:</strong> {{ user.first_name }} {{ user.last_name }}</p>
         <p><strong>E-mail Acadêmico:</strong> {{ user.email }}</p>
@@ -51,25 +54,52 @@ const handleLogout = () => {
   color: white;
   padding: 2rem;
   border-bottom: 5px solid #5E0B15;
+  max-height: 30vh;
+  display: flex;
+  justify-content: center;
 }
 .header-content {
-  max-width: 1440px;
-  margin: 0 auto;
+  //max-width: 1440px;
+  margin: 0;
   display: flex;
-  align-items: flex-start;
-  gap: 2rem;
+  align-items: center;
+  gap: 1rem;
 }
-.logo { font-size: 2.5rem; }
+
+.logo {
+  font-size: 1.5rem;
+  width: 12rem; /* <-- REDUZA ESTE VALOR (ex: de 22rem para 12rem) */
+  height: auto;
+}
+
+.logo-panel {
+  width: 20rem; /* <-- Experimente este valor. Ajuste se precisar (ex: 15rem, 18rem) */
+  height: auto;
+  flex-shrink: 0; /* Impede que os outros painéis "amassem" o logo */
+}
+
 .user-info-card, .skills-card {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  background-color: #B23A48;
+  border-radius: 20px;
   padding: 1rem;
   flex: 1;
+
+  font-size: 1.2rem ;
+  font-family: 'Poppins', sans-serif;
+
 }
 .user-info-card p { margin: 0.25rem 0; }
 .user-actions { margin-top: 1rem; }
 .user-actions .p-button { color: white; text-decoration: underline; }
 .skills-card h3 { margin-top: 0; }
-.skills-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.skills-tags .p-tag { background-color: rgba(255, 255, 255, 0.2); }
+.skills-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  //background-color: #B23A48; /* Cor rosa/vinho claro para as tags */
+  color: white;
+
+
+}
+.skills-tags .p-tag { background-color: #C2555E;color: white;font-size: 1.2rem; padding: 1rem; border-radius: 15px }
 </style>

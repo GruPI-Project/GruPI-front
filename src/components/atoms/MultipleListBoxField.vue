@@ -29,8 +29,9 @@ const { value, errorMessage } = useField<any[]>(toRef(props, 'name'));
         :class="{ 'p-invalid': errorMessage }"
         size="large"
         multiple
-        filter
         class="p-listbox"
+        checkmark
+        :highlightOnSelect="false"
     />
     <Message v-if="errorMessage" severity="error" :closable="false">{{ errorMessage }}</Message>
   </div>
@@ -50,5 +51,6 @@ const { value, errorMessage } = useField<any[]>(toRef(props, 'name'));
   font-size: 1.1rem;
   font-weight: normal;
 }
+
 
 </style>

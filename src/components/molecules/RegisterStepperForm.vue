@@ -299,7 +299,7 @@ const onFormSubmit = handleSubmit(async (formValues) => {
                   label="Escolha suas tags de interesse (max 5)"
                   :options="Tags"
                   optionValue="id"
-                  optionLabel="nome"
+                  optionLabel="name"
               />
             </div>
             <div class="btn-group">

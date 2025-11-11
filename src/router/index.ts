@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.store'
 
-import DashboardPage from "@/views/dashboard.vue";
+import DashboardPage from "@/views/DashboardPage.vue";
 
 const routes = [
     {
@@ -68,7 +68,7 @@ router.beforeEach(async (to, _from, next) => {
     const authStore = useAuthStore()
     
     // Initialize auth state if not already done
-    if (!authStore.user && !authStore.status) {
+    if (!authStore.user && authStore.status === 'idle') {
         try {
             await authStore.fetchUser()
         } catch (error) {
@@ -79,6 +79,7 @@ router.beforeEach(async (to, _from, next) => {
     // Check if route requires authentication
     if (to.meta.requiresAuth) {
         if (!authStore.isAuthenticated) {
+            console.log("not authenticated")
             // Redirect to login with return url
             next({
                 name: 'Login',
@@ -90,6 +91,7 @@ router.beforeEach(async (to, _from, next) => {
     
     // If going to login and already authenticated, redirect to dashboard
     if (to.name === 'Login' && authStore.isAuthenticated) {
+        console.log("authenticated")
         next({ name: 'dashboard' })
         return
     }

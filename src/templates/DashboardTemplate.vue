@@ -12,7 +12,7 @@
 
 <style scoped>
 .dashboard-layout {
-  background-color: #FAF7F5; /* Cor de fundo creme para toda a página */
+  background-color: #F8F5F0; /* Cor de fundo creme para toda a página */
   min-height: 100vh;
 }
 
@@ -23,8 +23,12 @@
 
 .main-section {
   /* Esta é a lógica para evitar que o conteúdo se estique em telas ultrawide */
-  max-width: 1440px;
+  //max-width: 1440px;
   margin: 0 auto; /* Centraliza o conteúdo principal */
   padding: 2rem;
 }
+
+
 </style>
+<script setup lang="ts">
+</script>

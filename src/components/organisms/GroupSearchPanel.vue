@@ -8,16 +8,18 @@ import Button from 'primevue/button';
 
 <template>
   <div class="group-search-panel">
-    <!-- Barra de Pesquisa e Ação -->
     <div class="search-bar">
-      <IconField iconPosition="left">
-        <InputIcon class="pi pi-search"></InputIcon>
-        <InputText placeholder="Pesquisar" class="search-input" />
-      </IconField>
+
+      <div class="search-input-wrapper">
+        <IconField iconPosition="left">
+          <InputIcon class="pi pi-search"></InputIcon>
+          <InputText placeholder="Pesquisar" class="search-input" />
+        </IconField>
+      </div>
+
       <Button label="Criar Novo GruPI" class="create-button" />
     </div>
 
-    <!-- Lista de Grupos -->
     <GroupList />
   </div>
 </template>
@@ -25,22 +27,28 @@ import Button from 'primevue/button';
 <style scoped>
 .search-bar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  gap: 2rem;
+
+}
+
+.search-input-wrapper {
+  flex-grow: 1;
 }
 
 .search-input {
-  width: 400px;
+  width: 100%;
 }
 
 .create-button {
   background-color: #9E1B32;
   border: none;
   font-weight: bold;
+  flex-shrink: 0;
 }
 
-/* Media query para telas menores */
+
 @media (max-width: 768px) {
   .search-bar {
     flex-direction: column;
@@ -49,6 +57,11 @@ import Button from 'primevue/button';
   }
   .search-input {
     width: 100%;
+  }
+
+
+  .search-input-wrapper {
+    flex-grow: 0;
   }
 }
 </style>

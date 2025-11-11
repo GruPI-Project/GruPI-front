@@ -60,6 +60,13 @@ const GrupiPreset = definePreset(Aura, {
                 }
             }
         }
+    },
+    components: {
+        divider: {
+            root: {
+                'borderColor': '#9d1b32',
+            }
+        }
     }
 });
 

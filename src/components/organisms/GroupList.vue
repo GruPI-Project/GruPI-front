@@ -9,7 +9,7 @@ const groups = ref<Group[]>([]);
 const isLoading = ref(true);
 
 // Mock de dados para o design
-const mockGroups: Group[] = Array(9).fill({
+const mockGroups: Group[] = Array(21).fill({
   id: 1,
   title: 'Grupo PI-1',
   polo: 'UniCEU São Rafael',
@@ -46,6 +46,6 @@ onMounted(async () => {
   display: grid;
   /* Cria colunas responsivas: tenta encaixar colunas de 350px, com no mínimo 3 colunas em telas grandes */
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 1.5rem;
+  gap: 2rem;
 }
 </style>
