@@ -22,9 +22,9 @@ const PIs = ref<PIOption[]>([]);
 const Tags = ref<TagsOption[]>([]);
 
 const schema = toTypedSchema(z.object({
-  email: z.string()
-      .email('Formato de email inválido')
-      .min(1, 'O email é obrigatório')
+  email: z
+      .email('Formato de email inválido, O email deve ser do domínio @aluno.univesp.br')
+      .min(1, 'O email é obrigatório ')
       .refine((email) => email.endsWith('@aluno.univesp.br'), {
         message: 'O email deve ser do domínio @aluno.univesp.br',
       })
@@ -67,6 +67,9 @@ const schema = toTypedSchema(z.object({
 
 const {handleSubmit, validateField, values, setFieldValue} = useForm({
   validationSchema: schema,
+  initialValues: {
+    tags: [], // Set default value here instead of in Zod schema
+  },
 });
 
 onMounted(async () => {
@@ -148,8 +151,9 @@ const goToPrevStep = (targetStep: Step) => {
 const onFormSubmit = handleSubmit(async (formValues) => {
   try {
     console.log("Formulário completo enviado:", formValues);
+    console.log("Tags (IDs inteiros):", formValues.tags);
     
-    // Preparar o payload conforme esperado pela API
+    // Preparar o payload - enviar tags como array de inteiros diretamente
     const payload = {
       email: formValues.email,
       password1: formValues.password1,
@@ -160,29 +164,32 @@ const onFormSubmit = handleSubmit(async (formValues) => {
       curso: formValues.curso,
       first_name: formValues.first_name,
       last_name: formValues.last_name,
+      tags: formValues.tags || [], // Enviar tags como array de inteiros
     };
     
-    await authStore.register(payload);
+    console.log("Payload final a ser enviado:", payload);
+    
+    await authStore.registerAndRequestOTP(payload);
     
     toast.add({
       severity: 'success',
       summary: 'Cadastro realizado com sucesso!',
-      detail: 'Você receberá um email com o código de validação. Redirecionando para o login...',
+      detail: 'Enviamos um email com o código de validação. Redirecionando para confirmação...',
       life: 3000
     });
     
-    // Redirecionar para a página de login após 2 segundos
+    // Redirecionar para a página de confirmação de OTP
     setTimeout(() => {
-      router.push('/login');
+      router.push({ name: 'register-otp-confirm', query: { email: formValues.email } });
     }, 2000);
     
   } catch (error: any) {
     console.error('Erro ao registrar usuário:', error);
     
     // Extrair mensagem de erro da API se disponível
-    const errorMessage = error?.response?.data?.message 
+    const errorMessage = error?.response?.data?.message
       || error?.response?.data?.detail
-      || error?.message 
+      || error?.message
       || 'Erro ao registrar usuário. Tente novamente.';
     
     toast.add({
@@ -322,7 +329,7 @@ const onFormSubmit = handleSubmit(async (formValues) => {
             <div class="step-content-final">
               <div style="justify-self: center ; text-align: center;">
               <h2>Confirmação dos Dados</h2>
-              <strong> Voce vai receber um email com o codigo de validacao</strong>
+              <strong> Você receberá um email com o código de validação</strong>
               </div>
             </div>
             <div class="btn-group">

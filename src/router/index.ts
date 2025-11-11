@@ -1,22 +1,23 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth.store'
 
-// import Dashboard from "@/views/dashboard.vue";
 import DashboardPage from "@/views/dashboard.vue";
 
 const routes = [
     {
-        path: '/dashboard', // A URL para a sua nova página
+        path: '/',
+        redirect: '/dashboard'
+    },
+    {
+        path: '/dashboard',
         name: 'dashboard',
         component: DashboardPage,
+        meta: { requiresAuth: true }
     },
     {
         path: '/login',
         name: 'Login',
-        //    "Lazy Loading"
-        //    Este componente só será baixado pelo navegador quando o usuário
-        //    realmente visitar a rota '/login'.
         component: () => {
-            // @ts-ignore
             return import('@/views/LoginPage.vue');
         }
     },
@@ -24,7 +25,6 @@ const routes = [
         path: '/password-reset/request',
         name: 'paswword-reset-request',
         component: () => {
-            // @ts-ignore
             return import('@/views/RequestPasswordPage.vue');
         }
     },
@@ -32,7 +32,6 @@ const routes = [
         path: '/password-reset/otp',
         name: 'password-reset-otp',
         component: () => {
-            // @ts-ignore
             return import('@/views/RequestPasswordOTPPage.vue');
         }
     },
@@ -40,7 +39,6 @@ const routes = [
         path: '/password-reset/set-new',
         name: 'set-new-password',
         component: () => {
-            // @ts-ignore
             return import('@/views/ResetPasswordPage.vue');
         }
     },
@@ -48,8 +46,14 @@ const routes = [
         path: '/register',
         name: 'register',
         component: () => {
-            // @ts-ignore
             return import('@/views/RegisterPage.vue');
+        }
+    },
+    {
+        path: '/verify-email',
+        name: 'register-otp-confirm',
+        component: () => {
+            return import('@/views/RegisterOtpConfirmPage.vue');
         }
     }
 ]
@@ -58,4 +62,39 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 })
+
+// Navigation guard to check authentication
+router.beforeEach(async (to, _from, next) => {
+    const authStore = useAuthStore()
+    
+    // Initialize auth state if not already done
+    if (!authStore.user && !authStore.status) {
+        try {
+            await authStore.fetchUser()
+        } catch (error) {
+            console.log('Failed to fetch user during navigation guard')
+        }
+    }
+
+    // Check if route requires authentication
+    if (to.meta.requiresAuth) {
+        if (!authStore.isAuthenticated) {
+            // Redirect to login with return url
+            next({
+                name: 'Login',
+                query: { redirect: to.fullPath }
+            })
+            return
+        }
+    }
+    
+    // If going to login and already authenticated, redirect to dashboard
+    if (to.name === 'Login' && authStore.isAuthenticated) {
+        next({ name: 'dashboard' })
+        return
+    }
+    
+    next()
+})
+
 export default router

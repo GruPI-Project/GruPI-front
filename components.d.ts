@@ -12,7 +12,6 @@ declare module 'vue' {
     BaseButton: typeof import('./src/components/atoms/BaseButton.vue')['default']
     BrandingPanel: typeof import('./src/components/organisms/BrandingPanel.vue')['default']
     Button: typeof import('primevue/button')['default']
-    Dialog: typeof import('primevue/dialog')['default']
     FormField: typeof import('./src/components/atoms/FormField.vue')['default']
     GroupCard: typeof import('./src/components/molecules/GroupCard.vue')['default']
     GroupList: typeof import('./src/components/organisms/GroupList.vue')['default']
@@ -29,6 +28,8 @@ declare module 'vue' {
     OTPValidatePanel: typeof import('./src/components/organisms/OTPValidatePanel.vue')['default']
     PasswordRecoveryRequestForm: typeof import('./src/components/molecules/PasswordRecoveryRequestForm.vue')['default']
     RegisterForm: typeof import('./src/components/molecules/RegisterForm.vue')['default']
+    RegisterOtpValidateForm: typeof import('./src/components/molecules/RegisterOtpValidateForm.vue')['default']
+    RegisterOtpValidatePanel: typeof import('./src/components/organisms/RegisterOtpValidatePanel.vue')['default']
     RegisterPanel: typeof import('./src/components/organisms/RegisterPanel.vue')['default']
     RegisterStepperForm: typeof import('./src/components/molecules/RegisterStepperForm.vue')['default']
     RequestPasswordPanel: typeof import('./src/components/organisms/RequestPasswordPanel.vue')['default']
@@ -43,7 +44,6 @@ declare module 'vue' {
     StepPanel: typeof import('primevue/steppanel')['default']
     StepPanels: typeof import('primevue/steppanels')['default']
     Stepper: typeof import('primevue/stepper')['default']
-    Toast: typeof import('primevue/toast')['default']
     UserProfileHeader: typeof import('./src/components/organisms/UserProfileHeader.vue')['default']
   }
 }

@@ -17,6 +17,54 @@ export const useAuthStore = defineStore('auth', {
     }),
 
     actions: {
+        // async register(credentials: {
+        //     email: string;
+        //     password1: string;
+        //     password2: string;
+        //     projeto_integrador: number;
+        //     drp: number;
+        //     polo: number;
+        //     curso: number;
+        //     first_name: string;
+        //     last_name: string;
+        // }) {
+        //     this.status = 'loading';
+        //     try {
+        //         // Garante que temos um CSRF token antes de fazer a requisição
+        //         await ensureCsrfToken();
+        //         await apiClient.post('/auth/registration/', credentials);
+        //         this.status = 'success';
+        //         console.log("Registro bem-sucedido");
+        //     } catch (error) {
+        //         this.status = 'error';
+        //         throw error;
+        //     }
+        // },
+        async registerAndRequestOTP(credentials: {
+            email: string;
+            password1: string;
+            password2: string;
+            projeto_integrador: number;
+            drp: number;
+            polo: number;
+            curso: number;
+            first_name: string;
+            last_name: string;
+            tags?: string[];
+        }) {
+            this.status = 'loading';
+            try {
+                // Registra o usuário - o backend já gera o OTP automaticamente
+                await ensureCsrfToken();
+                await apiClient.post('/auth/registration/', credentials);
+                
+                this.status = 'success';
+                console.log("Registro bem-sucedido - OTP foi enviado automaticamente");
+            } catch (error) {
+                this.status = 'error';
+                throw error;
+            }
+        },
         async register(credentials: {
             email: string;
             password1: string;
@@ -27,6 +75,7 @@ export const useAuthStore = defineStore('auth', {
             curso: number;
             first_name: string;
             last_name: string;
+            tags?: string[];
         }) {
             this.status = 'loading';
             try {
@@ -157,6 +206,24 @@ export const useAuthStore = defineStore('auth', {
                 return response.data;
             } catch (error) {
                 console.error("Erro ao obter as Tags:", error);
+                throw error;
+            }
+        },
+        async requestRegistrationOTP(payload: { email: string }) {
+            try {
+                await ensureCsrfToken();
+                await apiClient.post('/registration/request-otp/', payload);
+            } catch (error) {
+                console.error("Erro ao solicitar OTP de registro:", error);
+                throw error;
+            }
+        },
+        async validateRegistrationOTP(payload: { email: string; otp: string }) {
+            try {
+                await ensureCsrfToken();
+                await apiClient.post('/registration/validate-otp/', payload);
+            } catch (error) {
+                console.error("Erro ao validar OTP de registro:", error);
                 throw error;
             }
         },
