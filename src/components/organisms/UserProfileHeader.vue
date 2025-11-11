@@ -59,7 +59,6 @@ const handleLogout = () => {
   justify-content: center;
 }
 .header-content {
-  //max-width: 1440px;
   margin: 0;
   display: flex;
   align-items: center;
@@ -96,7 +95,6 @@ const handleLogout = () => {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  //background-color: #B23A48; /* Cor rosa/vinho claro para as tags */
   color: white;
 
 

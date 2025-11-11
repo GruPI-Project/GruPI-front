@@ -50,7 +50,7 @@ export const useAuthStore = defineStore('auth', {
             curso: number;
             first_name: string;
             last_name: string;
-            tags?: string[];
+            tags?: number[];
         }) {
             this.status = 'loading';
             try {

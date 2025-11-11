@@ -23,7 +23,6 @@
 
 .main-section {
   /* Esta é a lógica para evitar que o conteúdo se estique em telas ultrawide */
-  //max-width: 1440px;
   margin: 0 auto; /* Centraliza o conteúdo principal */
   padding: 2rem;
 }
