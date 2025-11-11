@@ -11,8 +11,8 @@ const authStore = useAuthStore();
 const user = computed(() => authStore.user);
 
 const handleLogout = () => {
-  authStore.logout();
-  router.push('/login');
+  // Redirect to logout page which handles comprehensive logout process
+  router.push('/logout');
 }
 </script>
 

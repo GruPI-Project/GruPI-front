@@ -55,6 +55,13 @@ const routes = [
         component: () => {
             return import('@/views/RegisterOtpConfirmPage.vue');
         }
+    },
+    {
+        path: '/logout',
+        name: 'logout',
+        component: () => {
+            return import('@/views/LogoutPage.vue');
+        }
     }
 ]
 
